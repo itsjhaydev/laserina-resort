@@ -81,7 +81,7 @@ const SignUpPage = () => {
                     {/* ✅ reCAPTCHA Component */}
                     <div className="my-4">
                         <ReCAPTCHA
-                            sitekey="6LcbmC0rAAAAAF9CtiwhkNmoUwKiCl5MxWITvGUa" // 🔁 Replace with your actual site key
+                            sitekey="6Le9rS0rAAAAAEy97gQtPxkKH57w7d5BvUGCOjDv" // 🔁 Replace with your actual site key
                             onChange={handleRecaptchaChange}
                         />
                     </div>
