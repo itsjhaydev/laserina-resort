@@ -4,17 +4,43 @@ import { useAuthStore } from "../store/authStore";
 import Input from "../components/Input";
 import { ArrowLeft, Loader, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
+import toast from "react-hot-toast";
 
 const ForgotPasswordPage = () => {
 	const [email, setEmail] = useState("");
+	const [recaptchaToken, setRecaptchaToken] = useState(null); // ✅ Token state
 	const [isSubmitted, setIsSubmitted] = useState(false);
 
 	const { isLoading, forgotPassword } = useAuthStore();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		await forgotPassword(email);
-		setIsSubmitted(true);
+	
+		if (!recaptchaToken) {
+			toast.error("Please complete the reCAPTCHA.");
+			return;
+		}
+	
+		try {
+			const response = await forgotPassword(email, recaptchaToken);
+	
+			if (response?.success) {
+				setIsSubmitted(true);
+				toast.success("Password reset instructions sent to your email.");
+			} else {
+				toast.error(response?.message || "Something went wrong. Please try again.");
+			}
+		} catch (error) {
+			console.error("Forgot password error:", error);
+			toast.error(error?.response?.data?.message || "Server error. Please try again.");
+		}
+	};
+
+
+	const handleRecaptchaChange = (token) => {
+		console.log("my recaptcha token: ", token);
+		setRecaptchaToken(token);
 	};
 
 	return (
@@ -43,6 +69,15 @@ const ForgotPasswordPage = () => {
 								onChange={(e) => setEmail(e.target.value)}
 								required
 							/>
+
+							{/* ✅ reCAPTCHA Component */}
+							<div className="my-4">
+								<ReCAPTCHA
+									sitekey="6LcQmC0rAAAAAGXR-qc5_T2VbJwCe8xBYt2gUiea" // 🔁 Replace with your actual site key
+									onChange={handleRecaptchaChange}
+								/>
+							</div>
+
 							<motion.button
 								whileHover={{ scale: 1.02 }}
 								whileTap={{ scale: 0.98 }}
