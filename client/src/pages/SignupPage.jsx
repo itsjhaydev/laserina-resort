@@ -32,11 +32,11 @@ const SignUpPage = () => {
                 toast.success('Account created please verify your email');
                 navigate("/verify-email");
             } else {
-                toast.error("Signup failed. Please try again.");
+                toast.error(response.error.message);
             }
         } catch (error) {
             console.log(error);
-            toast.error("Something went wrong, please try again later.");
+            toast.error(error.message);
         }
     };
 
@@ -50,8 +50,6 @@ const SignUpPage = () => {
             <div className="w-full md:w-1/3 flex flex-col justify-center items-center px-6">
                 <h2 className="text-3xl font-bold mb-2 pt-18">Create Account</h2>
                 <p className="mb-4 text-gray-500">Join us today and enjoy exclusive offers.</p>
-
-                {error && <p className='text-red-500 font-semibold mb-2'>{error}</p>}
 
                 <form onSubmit={handleSignUp} className="w-[80%]">
                     <Input
@@ -79,7 +77,7 @@ const SignUpPage = () => {
                     <PasswordStrengthMeter password={password} />
 
                     {/* ✅ reCAPTCHA Component */}
-                    <div className="my-4">
+                    <div className="my-4 w-full flex justify-center items-center">
                         <ReCAPTCHA
                             sitekey="6LcQmC0rAAAAAGXR-qc5_T2VbJwCe8xBYt2gUiea" // 🔁 Replace with your actual site key
                             onChange={handleRecaptchaChange}

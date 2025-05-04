@@ -29,7 +29,7 @@ const ForgotPasswordPage = () => {
 				setIsSubmitted(true);
 				toast.success("Password reset instructions sent to your email.");
 			} else {
-				toast.error(response?.message || "Something went wrong. Please try again.");
+				toast.error("Error sending password reset email.");
 			}
 		} catch (error) {
 			console.error("Forgot password error:", error);
@@ -71,7 +71,7 @@ const ForgotPasswordPage = () => {
 							/>
 
 							{/* ✅ reCAPTCHA Component */}
-							<div className="my-4">
+							<div className="my-4 flex justify-center items-center">
 								<ReCAPTCHA
 									sitekey="6LcQmC0rAAAAAGXR-qc5_T2VbJwCe8xBYt2gUiea" // 🔁 Replace with your actual site key
 									onChange={handleRecaptchaChange}
