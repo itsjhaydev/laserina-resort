@@ -62,11 +62,14 @@ const RedirectAuthenticatedUser = ({ children }) => {
 };
 
 function App() {
-  const { isCheckingAuth, checkAuth } = useAuthStore();
+  const { isCheckingAuth, checkAuth, user } = useAuthStore();
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    if (!user) {
+      checkAuth();
+    }
+  }, [user, checkAuth]);
+
 
   if (isCheckingAuth) return <LoadingSpinner />;
 
