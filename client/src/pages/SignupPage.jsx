@@ -41,7 +41,7 @@ const SignUpPage = () => {
     };
 
     const handleRecaptchaChange = (token) => {
-        console.log(token);
+        console.log("my recaptcha token: ", token);
         setRecaptchaToken(token); 
     };
 
@@ -81,7 +81,7 @@ const SignUpPage = () => {
                     {/* ✅ reCAPTCHA Component */}
                     <div className="my-4">
                         <ReCAPTCHA
-                            sitekey="6Le9rS0rAAAAAEy97gQtPxkKH57w7d5BvUGCOjDv" // 🔁 Replace with your actual site key
+                            sitekey="6LcQmC0rAAAAAGXR-qc5_T2VbJwCe8xBYt2gUiea" // 🔁 Replace with your actual site key
                             onChange={handleRecaptchaChange}
                         />
                     </div>
