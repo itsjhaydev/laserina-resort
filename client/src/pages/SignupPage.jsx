@@ -41,7 +41,8 @@ const SignUpPage = () => {
     };
 
     const handleRecaptchaChange = (token) => {
-        setRecaptchaToken(token); // Save the reCAPTCHA token from frontend
+        console.log(token);
+        setRecaptchaToken(token); 
     };
 
     return (
