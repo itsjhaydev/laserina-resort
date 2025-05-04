@@ -121,7 +121,13 @@ const Reservation = () => {
             toast.success('Reservation created successfully!');
             navigate("/profile");
         } catch (error) {
-            toast.error(error.message || 'Failed to create reservation');
+            const msg = error.message;
+
+            if ( msg.includes("already booked this cottage") || msg.includes("up to 2 active reservations")) {
+                toast(msg, { icon: '⚠️' }); // ✅ Show as warning
+            } else {
+                toast.error(msg || 'Failed to create reservation');
+            }
         } finally {
             setIsLoading(false);
         }
