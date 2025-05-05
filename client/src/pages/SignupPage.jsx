@@ -27,17 +27,16 @@ const SignUpPage = () => {
         }
 
         try {
-			await signup(email, password, name, recaptchaToken);
+            await signup(email, password, name, recaptchaToken);
             toast.success('Account created succesfully!');
-			navigate("/verify-email");
-		} catch (err) {
-			toast.error(error);
-		}
+            navigate("/verify-email");
+        } catch (err) {
+            toast.error(err.message);
+        }
     };
 
     const handleRecaptchaChange = (token) => {
-        console.log("my recaptcha token: ", token);
-        setRecaptchaToken(token); 
+        setRecaptchaToken(token);
     };
 
     return (
@@ -45,6 +44,8 @@ const SignUpPage = () => {
             <div className="w-full md:w-1/3 flex flex-col justify-center items-center px-6">
                 <h2 className="text-3xl font-bold mb-2 pt-18">Create Account</h2>
                 <p className="mb-4 text-gray-500">Join us today and enjoy exclusive offers.</p>
+
+                {error && <p className='text-red-500 font-semibold mt-2'>{error}</p>}
 
                 <form onSubmit={handleSignUp} className="w-[80%]">
                     <Input
