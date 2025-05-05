@@ -16,21 +16,15 @@ const ForgotPasswordPage = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-	
+
 		if (!recaptchaToken) {
 			toast.error("Please complete the reCAPTCHA.");
 			return;
 		}
-	
+
 		try {
-			const response = await forgotPassword(email, recaptchaToken);
-	
-			if (response?.success) {
-				setIsSubmitted(true);
-				toast.success("Password reset instructions sent to your email.");
-			} else {
-				toast.error("Error sending password reset email.");
-			}
+			await forgotPassword(email, recaptchaToken);
+			setIsSubmitted(true);
 		} catch (error) {
 			console.error("Forgot password error:", error);
 			toast.error(error?.response?.data?.message || "Server error. Please try again.");

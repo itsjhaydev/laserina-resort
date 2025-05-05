@@ -27,17 +27,12 @@ const SignUpPage = () => {
         }
 
         try {
-            const response = await signup(email, password, name, recaptchaToken); // ✅ Send token to backend (if needed)
-            if (!response.error) {
-                toast.success('Account created please verify your email');
-                navigate("/verify-email");
-            } else {
-                toast.error(response.error.message);
-            }
-        } catch (error) {
-            console.log(error);
-            toast.error(error.message);
-        }
+			await signup(email, password, name, recaptchaToken);
+            toast.success('Account created succesfully!');
+			navigate("/verify-email");
+		} catch (err) {
+			toast.error(error);
+		}
     };
 
     const handleRecaptchaChange = (token) => {
