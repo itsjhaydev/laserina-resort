@@ -56,7 +56,7 @@ export const useAuthStore = create((set) => ({
 			throw error;
 		}
 	},
-	
+
 
 	verifyEmail: async (code) => {
 		set({ isLoading: true, error: null });
@@ -81,7 +81,7 @@ export const useAuthStore = create((set) => ({
 			set({ error: null, isCheckingAuth: false, isAuthenticated: false });
 		}
 	},
-	
+
 
 	forgotPassword: async (email, recaptchaToken) => {
 		set({ isLoading: true, error: null });
@@ -115,19 +115,16 @@ export const useAuthStore = create((set) => ({
 		set({ isLoading: true, error: null, message: null });
 
 		try {
-			const formData = new FormData();
-
-			// Append all fields
-			for (const key in reservationData) {
-				formData.append(key, reservationData[key]);
-			}
-
-			const response = await axios.post(`${RESERVATION_API}/create-reservation`, formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				},
-				withCredentials: true
-			});
+			// No need to convert file here - frontend already sends base64
+			const response = await axios.post(`${RESERVATION_API}/create-reservation`,
+				reservationData,
+				{
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					withCredentials: true
+				}
+			);
 
 			set({
 				reservation: response.data.reservation,
@@ -140,11 +137,9 @@ export const useAuthStore = create((set) => ({
 
 		} catch (error) {
 			let errorMessage = "Error creating reservation";
-
 			if (error.response) {
 				errorMessage = error.response.data?.message || errorMessage;
 			}
-
 			set({ isLoading: false, error: errorMessage });
 			throw new Error(errorMessage);
 		}

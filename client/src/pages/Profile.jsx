@@ -146,16 +146,43 @@ export default function Profile() {
 							>
 								×
 							</button>
-							<h2 className="text-xl font-semibold text-blue-700 mb-4">
+							<h2 className="text-xl font-semibold text-blue-700 mb-4 border-b">
+								Personal Details
+							</h2>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+								<Detail label="Name" value={selectedReservation.guestName} />
+								<Detail label="Email" value={selectedReservation.email} />
+								<Detail label="Contact Number" value={selectedReservation.contactNumber} />
+								<Detail label="Address" value={selectedReservation.address} />
+							</div>
+							<h2 className="text-xl font-semibold text-blue-700 mt-4 mb-4  border-b">
 								Reservation Details
 							</h2>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
 								<Detail label="Reservation ID" value={selectedReservation._id} />
 								<Detail label="Status" value={selectedReservation.status} />
-								<Detail label="Cottage" value={selectedReservation.cottageName} />
+								<Detail label="Cottage Name" value={selectedReservation.cottageName} />
+								<Detail label="Cottage Price" value={`₱${selectedReservation.cottagePrice}/head`} />
+								<Detail label="Number of Guests" value={selectedReservation.numberOfGuest} />
 								<Detail label="Check-in" value={new Date(selectedReservation.checkIn).toDateString()} />
 								<Detail label="Check-out" value={new Date(selectedReservation.checkOut).toDateString()} />
-								<Detail label="Total Amount" value={`₱${selectedReservation.totalAmount.toFixed(2)}`} />
+								<Detail label="Total Amount" value={`₱${selectedReservation.totalAmount}`} />
+							</div>
+							<h2 className="text-xl font-semibold text-center text-blue-700 mt-4 mb-4  border-b">
+								Proof of Payment
+							</h2>
+							<div className="flex flex-col justify-center items-center">
+								<label htmlFor="proofOfpayment">Receipt</label>
+								<Detail
+									label=""
+									value={
+										<img
+											className="h-[200px] border border-gray-400 rounded-md shadow-md mt-2"
+											src={selectedReservation.proofOfPayment}
+											alt="Proof of Payment"
+										/>
+									}
+								/>
 							</div>
 						</div>
 					</div>

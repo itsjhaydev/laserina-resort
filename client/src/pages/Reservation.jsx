@@ -48,13 +48,79 @@ const Reservation = () => {
         }));
     };
 
-    const handleFileChange = (e) => {
+    const handleFileChange = async (e) => {
         const file = e.target.files[0];
+        
         if (file) {
-            setValues(prev => ({ ...prev, proofOfPayment: file }));
-            setPreview(file.type.startsWith('image') ? URL.createObjectURL(file) : null);
+          try {
+            // Compress image if it's an image (not PDF)
+            if (file.type.startsWith('image/')) {
+              const compressedFile = await compressImage(file);
+              const base64 = await fileToBase64(compressedFile);
+              setValues(prev => ({ ...prev, proofOfPayment: base64 }));
+              setPreview(base64);
+            } else {
+              const base64 = await fileToBase64(file);
+              setValues(prev => ({ ...prev, proofOfPayment: base64 }));
+              setPreview(null);
+            }
+          } catch (error) {
+            toast.error('Error processing file');
+          }
         }
-    };
+      };
+      
+      // Helper function to compress image
+      const compressImage = async (file) => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              const MAX_WIDTH = 800;
+              const MAX_HEIGHT = 800;
+              let width = img.width;
+              let height = img.height;
+      
+              if (width > height) {
+                if (width > MAX_WIDTH) {
+                  height *= MAX_WIDTH / width;
+                  width = MAX_WIDTH;
+                }
+              } else {
+                if (height > MAX_HEIGHT) {
+                  width *= MAX_HEIGHT / height;
+                  height = MAX_HEIGHT;
+                }
+              }
+      
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, width, height);
+              
+              canvas.toBlob((blob) => {
+                resolve(new File([blob], file.name, {
+                  type: 'image/jpeg',
+                  lastModified: Date.now()
+                }));
+              }, 'image/jpeg', 0.7);
+            };
+          };
+        });
+      };
+      
+      // Helper function to convert file to base64
+      const fileToBase64 = (file) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+      });
+
 
     const removeImage = () => {
         setValues(prev => ({ ...prev, proofOfPayment: null }));
@@ -123,7 +189,7 @@ const Reservation = () => {
         } catch (error) {
             const msg = error.message;
 
-            if ( msg.includes("already booked this cottage") || msg.includes("up to 2 active reservations")) {
+            if (msg.includes("already booked this cottage") || msg.includes("up to 2 active reservations")) {
                 toast(msg, { icon: '⚠️' }); // ✅ Show as warning
             } else {
                 toast.error(msg || 'Failed to create reservation');
@@ -311,13 +377,14 @@ const Reservation = () => {
 
                             {values.proofOfPayment && (
                                 <div className="flex flex-col items-center mt-4">
-                                    {preview && values.proofOfPayment.type.startsWith('image') && (
+                                    {preview && (
                                         <img
                                             src={preview}
                                             alt="Preview"
                                             className="w-36 h-48 object-cover mb-2"
                                         />
                                     )}
+
                                     <p className="text-sm mb-2">{values.proofOfPayment.name}</p>
                                     <button
                                         type="button"
