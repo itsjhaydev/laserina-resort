@@ -83,6 +83,7 @@ export default function Profile() {
 							<div key={res._id} className="border border-gray-200 rounded-md p-4 mb-4 shadow-sm">
 								<div className="flex justify-between items-center mb-3">
 									<span className="font-semibold text-blue-600">Booking #{res._id.slice(-6)}</span>
+
 									<span className={`px-3 py-1 rounded-full text-sm font-medium ${{
 										pending: "bg-yellow-100 text-yellow-800",
 										confirmed: "bg-green-100 text-green-800",
@@ -115,13 +116,14 @@ export default function Profile() {
 										<p className="font-medium">₱{res.totalAmount.toFixed(2)}</p>
 									</div>
 								</div>
-								<div className="mt-4 flex gap-3">
+								<div className="mt-4 flex justify-between items-center gap-3">
 									<button
 										onClick={() => setSelectedReservation(res)}
 										className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
 									>
 										View Details
 									</button>
+
 									{["pending", "confirmed"].includes(res.status) && (
 										<button
 											onClick={() => handleCancelReservation(res._id)}
@@ -129,6 +131,13 @@ export default function Profile() {
 										>
 											Cancel
 										</button>
+									)}
+
+									{/* Show cancellation reason only if status is cancelled */}
+									{res.status === "cancelled" && res.cancelReason && (
+										<div className="text-sm text-red-600 font-medium">
+											<p><strong className="text-blue-500">Cancellation Reason:</strong> {res.cancelReason}</p>
+										</div>
 									)}
 								</div>
 							</div>
